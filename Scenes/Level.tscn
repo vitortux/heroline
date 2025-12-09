@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://o21nso2sqj2e"]
+[gd_scene load_steps=6 format=4 uid="uid://o21nso2sqj2e"]
 
 [ext_resource type="Texture2D" uid="uid://dv6ttpf64trf8" path="res://icon.svg" id="1_0ba56"]
 [ext_resource type="PackedScene" uid="uid://chslibjp84rv8" path="res://Scenes/Player.tscn" id="2_vsvp5"]
+[ext_resource type="PackedScene" uid="uid://ceilfmbscycc0" path="res://Scenes/Slime.tscn" id="3_8rbpu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vsvp5"]
 texture = ExtResource("1_0ba56")
@@ -88,3 +89,6 @@ tile_set = SubResource("TileSet_sfrck")
 
 [node name="Player" parent="." instance=ExtResource("2_vsvp5")]
 position = Vector2(0, -64)
+
+[node name="Slime" parent="." instance=ExtResource("3_8rbpu")]
+position = Vector2(64, -48)

@@ -1,4 +1,5 @@
 using Godot;
+using Heroline.Scripts.Components;
 
 namespace Heroline;
 
@@ -21,14 +22,17 @@ public partial class Player : CharacterBody2D
 	private PlayerState _currentState = PlayerState.Idle;
 	private int _extraJumpsCount = 0;
 	private AnimatedSprite2D _animations;
-	private Timer _jumpBuffer;
+	private Timer _jumpBufferTimer;
 	private Timer _coyoteTimer;
+	private HealthComponent _healthComponent;
 
 	public override void _Ready()
 	{
 		_animations = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		_jumpBuffer = GetNode<Timer>("JumpBuffer");
+		_jumpBufferTimer = GetNode<Timer>("JumpBufferTimer");
 		_coyoteTimer = GetNode<Timer>("CoyoteTimer");
+		_healthComponent = GetNode<HealthComponent>("HealthComponent");
+		_healthComponent.Connect(nameof(HealthComponent.HealthDepleted), Callable.From(_OnHealthDepleted));
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -43,7 +47,7 @@ public partial class Player : CharacterBody2D
 	{
 		if (Input.IsActionJustPressed("jump"))
 		{
-			_jumpBuffer.Start();
+			_jumpBufferTimer.Start();
 		}
 
 		float direction = Input.GetAxis("move_left", "move_right");
@@ -66,19 +70,19 @@ public partial class Player : CharacterBody2D
 
 	private void UpdateMovement(double delta)
 	{
-		if ((IsOnFloor() || _coyoteTimer.TimeLeft > 0) && _jumpBuffer.TimeLeft > 0)
+		if ((IsOnFloor() || _coyoteTimer.TimeLeft > 0) && _jumpBufferTimer.TimeLeft > 0)
 		{
 			Velocity = new Vector2(Velocity.X, _jumpVelocity);
 			_currentState = PlayerState.Jump;
-			_jumpBuffer.Stop();
+			_jumpBufferTimer.Stop();
 			_coyoteTimer.Stop();
 		}
-		else if (_jumpBuffer.TimeLeft > 0 && _extraJumpsCount < _extraJumps)
+		else if (_jumpBufferTimer.TimeLeft > 0 && _extraJumpsCount < _extraJumps)
 		{
 			Velocity = new Vector2(Velocity.X, _jumpVelocity);
 			_currentState = PlayerState.Jump;
 			_extraJumpsCount++;
-			_jumpBuffer.Stop();
+			_jumpBufferTimer.Stop();
 		}
 
 		if (_currentState == PlayerState.Jump)
@@ -155,5 +159,10 @@ public partial class Player : CharacterBody2D
 				}
 				break;
 		}
+	}
+
+	private void _OnHealthDepleted()
+	{
+		QueueFree();
 	}
 }

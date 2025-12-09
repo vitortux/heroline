@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://chslibjp84rv8"]
+[gd_scene load_steps=9 format=3 uid="uid://chslibjp84rv8"]
 
 [ext_resource type="Script" uid="uid://c3lc5mf2uxypg" path="res://Scripts/Player.cs" id="1_p0vlq"]
 [ext_resource type="Texture2D" uid="uid://dv6ttpf64trf8" path="res://icon.svg" id="2_kyqiw"]
+[ext_resource type="PackedScene" uid="uid://d2cxijv5e6g7c" path="res://Scenes/Components/HealthComponent.tscn" id="3_gntrk"]
+[ext_resource type="PackedScene" uid="uid://ocjj53vc6x8t" path="res://Scenes/Components/HurtboxComponent.tscn" id="4_dewec"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kyqiw"]
 atlas = ExtResource("2_kyqiw")
@@ -21,6 +23,9 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_rpqav"]
 radius = 8.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_dewec"]
+radius = 8.0
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_p0vlq")
 
@@ -37,6 +42,17 @@ zoom = Vector2(4, 4)
 wait_time = 0.1
 one_shot = true
 
-[node name="JumpBuffer" type="Timer" parent="."]
+[node name="JumpBufferTimer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
+
+[node name="HealthComponent" parent="." instance=ExtResource("3_gntrk")]
+MaxHealth = 3.0
+
+[node name="HurtboxComponent" parent="." node_paths=PackedStringArray("HealthComponent") instance=ExtResource("4_dewec")]
+collision_layer = 0
+collision_mask = 2
+HealthComponent = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CircleShape2D_dewec")
