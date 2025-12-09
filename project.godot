@@ -8,6 +8,12 @@
 
 config_version=5
 
+[MonoCustomResourceRegistry]
+
+ClassPrefix=""
+SearchType=0
+ResourceScriptDirectories=Array[String](["res://"])
+
 [application]
 
 config/name="Heroline"
@@ -15,9 +21,17 @@ run/main_scene="uid://o21nso2sqj2e"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+HealthComponent="*res://Scripts/Components/HealthComponent.cs"
+
 [dotnet]
 
 project/assembly_name="Heroline"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/MonoCustomResourceRegistry/plugin.cfg")
 
 [input]
 
